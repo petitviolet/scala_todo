@@ -10,7 +10,6 @@ import anorm._
 import anorm.SqlParser._
 import org.joda.time._
 import models.AnormDateExtension._
-import java.math.BigInteger
 
 case class User(email: String,
                 name: String,
