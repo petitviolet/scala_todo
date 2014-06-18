@@ -6,7 +6,7 @@ import play.api.data.Forms._
 
 import models._
 import views._
-import play.api.{ Logger, Application }
+import play.api._
 /**
  * Created by Komurasaki on 2014/06/18.
  */

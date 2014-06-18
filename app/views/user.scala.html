@@ -3,18 +3,18 @@
 @import helper.twitterBootstrap._
 
 @main("Registration complete!") {
-<legend>Welcome!@user.name</legend>
+<legend>Welcome! @user.name</legend>
 
 <dl class="dl-horizontal">
-    <dt>Email Address</dt>
+    <dt>Email</dt>
     <dd>@user.email</dd>
 </dl>
 <dl class="dl-horizontal">
-    <dt>Your name</dt>
+    <dt>あなたの名前</dt>
     <dd>@user.name</dd>
 </dl>
 
 <div class="well well-small">
-    <a href="@routes.UserController.logout">logout</a>
+    <a href="@routes.UserController.logout">ログアウト</a>
 </div>
 }

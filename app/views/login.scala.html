@@ -25,7 +25,7 @@ routes.UserController.authenticate,
     form("email"),
     'type -> "email",
     'placeholder -> "john@example.com",
-    '_label -> "Email Address",
+    '_label -> "Email",
     '_error -> form.globalError
     )
     @helper.inputPassword(
@@ -43,6 +43,7 @@ routes.UserController.authenticate,
 </fieldset>
 
 <div class="well well-small">
-    Don't you have an account? <a href="@routes.UserController.signup">Let's sign up here</a>.
+    アカウントをお持ちでない方はこちら：
+    <a href="@routes.UserController.signup">新規登録</a>
 </div>
 }
