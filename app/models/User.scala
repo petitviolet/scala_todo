@@ -8,15 +8,25 @@ import play.api.Play.current
 
 import anorm._
 import anorm.SqlParser._
+import org.joda.time.DateTime
 
-case class User(email: String, name: String, password: String)
+
+case class User(email: String,
+                name: String,
+                password: String,
+                created: DateTime,
+                modified: DateTime)
 
 object User {
   val simple = {
     get[String]("user.email") ~
       get[String]("user.name") ~
-      get[String]("user.password") map {
-      case email ~ name ~ password => User(email, name, password)
+      get[String]("user.password") ~
+      get[DateTime]("user.created") ~
+      get[DateTime]("user.modified") map {
+      case email ~ name ~ password ~ created ~ modified => {
+        User(email, name, password, created, modified)
+      }
     }
   }
 
@@ -60,16 +70,18 @@ object User {
       SQL(
         """
           insert into user (
-            email, name, password
+            email, name, password, created, modified
           )
           values (
-            {email}, {name}, {password}
+            {email}, {name}, {password}, {created}, {modified}
           )
         """
       ).on(
           'email -> user.email,
           'name -> user.name,
-          'password -> user.password
+          'password -> user.password,
+          'created -> new DateTime(),
+          'modified -> new DateTime()
         ).executeUpdate()
 
       user

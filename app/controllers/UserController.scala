@@ -27,9 +27,9 @@ object UserController extends Controller with Secured {
 //  }}
 
     def show = IsAuthenticated {email => _ => {
-    Logger.debug("IsAuthenticated =>" + email)
-    Ok(views.html.test("OK"))
-    User.findByEmail(email) .map {
+    val user: Option[User] = User.findByEmail(email)
+    Logger.debug("UserController.show =>" + user + ", " + email)
+    user.map {
       user => Ok(views.html.user(user))
     } .getOrElse {
       Unauthorized("Oops, you are not authenticated")
