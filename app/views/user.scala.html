@@ -13,7 +13,10 @@
     <dt>あなたの名前</dt>
     <dd>@user.name</dd>
 </dl>
-
+<dl class="dl-horizontal">
+    <dt>情報</dt>
+    <dd>@user.toString()</dd>
+</dl>
 <div class="well well-small">
     <a href="@routes.UserController.logout">ログアウト</a>
 </div>

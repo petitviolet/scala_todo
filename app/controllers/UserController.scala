@@ -5,8 +5,10 @@ import play.api.data._
 import play.api.data.Forms._
 
 import models._
-import views._
 import play.api._
+import org.joda.time.DateTime
+import models.AnormDateExtension._
+
 /**
  * Created by Komurasaki on 2014/06/18.
  */
@@ -32,7 +34,7 @@ object UserController extends Controller with Secured {
     user.map {
       user => Ok(views.html.user(user))
     } .getOrElse {
-      Unauthorized("Oops, you are not authenticated")
+      Redirect(routes.UserController.login())
     }
   }}
 
@@ -87,7 +89,9 @@ object UserController extends Controller with Secured {
     signupForm.bindFromRequest.fold(
       errors => BadRequest(views.html.signup(errors)),
       form => {
-        val user = User(form._1, form._2, form._3._1)
+        val timeStamp = new DateTime()
+        Logger.debug("timestamp =>" + timeStamp)
+        val user = User(form._1, form._2, form._3._1, timeStamp, timeStamp)
         User.create(user)
         Ok(views.html.user(user))
       }

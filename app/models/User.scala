@@ -8,8 +8,9 @@ import play.api.Play.current
 
 import anorm._
 import anorm.SqlParser._
-import org.joda.time.DateTime
-
+import org.joda.time._
+import models.AnormDateExtension._
+import java.math.BigInteger
 
 case class User(email: String,
                 name: String,
@@ -80,8 +81,8 @@ object User {
           'email -> user.email,
           'name -> user.name,
           'password -> user.password,
-          'created -> new DateTime(),
-          'modified -> new DateTime()
+          'created -> user.created,
+          'modified -> user.modified
         ).executeUpdate()
 
       user
