@@ -7,7 +7,7 @@ import play.api._
 import play.api.mvc._
 
 trait Secured {
-  private def email(request: RequestHeader) = request.session.get("email")
+  private def getEmail(request: RequestHeader) = request.session.get("email")
 
   // 未認証時のリダイレクト先
   private def onUnauthorized(request: RequestHeader) = {
@@ -16,7 +16,7 @@ trait Secured {
 
   // Actionに認証をかませてラップ
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = {
-    Security.Authenticated(email, onUnauthorized) { user =>
+    Security.Authenticated(getEmail, onUnauthorized) { user =>
       Action(request => f(user)(request))
     }
   }

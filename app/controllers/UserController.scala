@@ -22,20 +22,20 @@ object UserController extends Controller with Secured {
   )
 
   // トップページ
-  def index = IsAuthenticated { email => _ => {
-      Logger.debug("IsAuthenticated =>" + email)
-      User.findByEmail(email) match {
-        case Some(user) => {
-          Logger.debug("invalid...")
-          Ok(views.html.user(user))
-        }
-        case _ => {
-          Logger.debug("invalid...")
-          Redirect(routes.UserController.login())
-        }
-      }
+//  def show = Action {
+//    Ok(views.html.test("Oops!!!"))
+//  }}
+
+    def show = IsAuthenticated {email => _ => {
+    Logger.debug("IsAuthenticated =>" + email)
+    Ok(views.html.test("OK"))
+    User.findByEmail(email) .map {
+      user => Ok(views.html.user(user))
+    } .getOrElse {
+      Unauthorized("Oops, you are not authenticated")
     }
-  }
+  }}
+
 
   // ログインページ
   def login = Action { implicit request =>
@@ -43,11 +43,13 @@ object UserController extends Controller with Secured {
   }
 
   // ユーザ認証
-  def authenticate = Action { implicit request =>
+  def authenticate = Action { implicit request => {
+    Logger.debug("authenticate")
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.login(formWithErrors)),
-      user => Redirect(routes.UserController.index).withSession("email" -> user._1)
+      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      user => Redirect(routes.UserController.show).withSession("email" -> user._1)
     )
+  }
   }
 
   // ログアウト
@@ -77,13 +79,13 @@ object UserController extends Controller with Secured {
 
   // ユーザ登録ページ
   def signup = Action {
-    Ok(html.signup(signupForm))
+    Ok(views.html.signup(signupForm))
   }
 
   // ユーザ登録
   def register = Action { implicit request =>
     signupForm.bindFromRequest.fold(
-      errors => BadRequest(html.signup(errors)),
+      errors => BadRequest(views.html.signup(errors)),
       form => {
         val user = User(form._1, form._2, form._3._1)
         User.create(user)
