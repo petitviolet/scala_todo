@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+@(form: Form[(String, String)])(implicit flash: Flash)
 
-</body>
-</html>
+@import helper.twitterBootstrap._
+
+@main("Login") {
+<legend>Login</legend>
+@helper.form(
+routes.UserController.authenticate,
+'class -> "form-horizontal"
+) {
+<fieldset>
+    <!--@if(form.hasErrors) {-->
+    <!--<div class="alert alert-block alert-error">-->
+        <!--There are problems.-->
+    <!--</div>-->
+    <!--}-->
+
+    @flash.get("success").map { message =>
+    <div class="alert alert-block alert-info">
+        @message
+    </div>
+    }
+
+    @helper.inputText(
+    form("email"),
+    'type -> "email",
+    'placeholder -> "john@example.com",
+    '_label -> "Email Address",
+    '_error -> form.globalError
+    )
+    @helper.inputPassword(
+    form("password"),
+    'placeholder -> "secret",
+    '_label -> "Passowrd",
+    '_error -> form.globalError
+    )
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" id="loginbutton" class="btn">Login</button>
+        </div>
+    </div>
+    }
+</fieldset>
+
+<div class="well well-small">
+    Don't you have an account? <a href="@routes.UserController.signup">Let's sign up here</a>.
+</div>
+}
