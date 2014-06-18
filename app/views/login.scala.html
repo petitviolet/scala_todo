@@ -9,11 +9,11 @@ routes.UserController.authenticate,
 'class -> "form-horizontal"
 ) {
 <fieldset>
-    <!--@if(form.hasErrors) {-->
-    <!--<div class="alert alert-block alert-error">-->
-        <!--There are problems.-->
-    <!--</div>-->
-    <!--}-->
+    @if(form.hasErrors) {
+    <div class="alert alert-block alert-error">
+        There are problems.
+    </div>
+    }
 
     @flash.get("success").map { message =>
     <div class="alert alert-block alert-info">

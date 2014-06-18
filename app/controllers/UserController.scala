@@ -6,6 +6,7 @@ import play.api.data.Forms._
 
 import models._
 import views._
+import play.api.{ Logger, Application }
 /**
  * Created by Komurasaki on 2014/06/18.
  */
@@ -22,9 +23,16 @@ object UserController extends Controller with Secured {
 
   // トップページ
   def index = IsAuthenticated { email => _ => {
+      Logger.debug("IsAuthenticated =>" + email)
       User.findByEmail(email) match {
-        case Some(user) => Ok(views.html.user(user))
-        case _ => Redirect(routes.UserController.login())
+        case Some(user) => {
+          Logger.debug("invalid...")
+          Ok(views.html.user(user))
+        }
+        case _ => {
+          Logger.debug("invalid...")
+          Redirect(routes.UserController.login())
+        }
       }
     }
   }

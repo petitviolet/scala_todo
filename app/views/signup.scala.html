@@ -9,11 +9,11 @@ routes.UserController.register,
 'class -> "form-horizontal"
 ) {
 <fieldset>
-    <!--@if(form.hasErrors) {-->
-    <!--<div class="alert alert-block alert-error">-->
-        <!--There are problems.-->
-    <!--</div>-->
-    <!--}-->
+    @if(form.hasErrors) {
+    <div class="alert alert-block alert-error">
+        There are problems.
+    </div>
+    }
 
     @helper.inputText(
     form("email"),
