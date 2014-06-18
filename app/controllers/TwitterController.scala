@@ -8,15 +8,17 @@ import twitter4j.auth.AccessToken
 import twitter4j.TwitterFactory
 import scala.collection.JavaConversions._
 
-object Application extends ScalaController with TwitterAuthConfig {
-
+/**
+ * Created by Komurasaki on 2014/06/17.
+ */
+class TwitterController extends ScalaController with TwitterAuthConfig {
   lazy val twitter = {
     val tw = TwitterFactory.getSingleton
     tw.setOAuthConsumer(consumer.key, consumer.secret)
     tw
   }
 
-  def index = Action { request =>
+  def index = Action { implicit request =>
     val newSession = getOrCreateSessionId(request)
     val content = Option(getUserProfile(request)).fold(getRedirectAction(request, newSession, "TwitterClient", "/").getLocation) { p =>
       val tp = p.asInstanceOf[TwitterProfile]

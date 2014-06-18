@@ -3,14 +3,14 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                   controllers.TaskController.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Task Pages
-GET /tasks controllers.Application.tasks
-POST /tasks controllers.Application.newTask
-POST /tasks/:id/delete controllers.Application.deleteTask(id: Long)
+GET /tasks controllers.TaskController.tasks
+POST /tasks controllers.TaskController.newTask
+POST /tasks/:id/delete controllers.TaskController.deleteTask(id: Long)
 
-GET /test/:message controllers.Application.test(message: String)
+# twitter
