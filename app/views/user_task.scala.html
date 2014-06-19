@@ -9,9 +9,9 @@
     <ul>
         @tasks.map { task =>
         <li>
-            @task.label
+            <div>@task.label</div>
             @form(routes.TaskController.deleteTask(task.id)) {
-            <input type="submit" value="Delete">
+            <input class="btn btn-danger" type="submit" value="Delete">
             }
         </li>
         }
@@ -19,12 +19,15 @@
 
     <h2>Add a new task</h2>
 
-    @form(routes.TaskController.newTask) {
-
-    @inputText(taskForm("label"))
-
-    <input type="submit" value="Create">
-
+    <p>
+    @form(routes.TaskController.newTask, 'class -> "form-inline", 'role -> "form") {
+        <div class="form-group">
+        @inputText(taskForm("label"), 'class -> "form-control")
+        <input class="btn btn-primary" type="submit" value="Create">
+        </div>
     }
+    </p>
+
+    <div><a class="btn btn-info" href="@routes.UserController.show">戻る</a></div>
 
 }

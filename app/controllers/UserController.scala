@@ -18,7 +18,7 @@ object UserController extends Controller with Secured {
     tuple(
       "email" -> nonEmptyText,
       "password" -> nonEmptyText
-    ) verifying ("Invalid email or password", result => result match {
+    ) verifying ("ログインに失敗しました", result => result match {
       case (email, password) => User.authenticate(email, password).isDefined
     })
   )
@@ -61,7 +61,7 @@ object UserController extends Controller with Secured {
   // ログアウト
   def logout = Action {
     Redirect(routes.UserController.login).withNewSession.flashing(
-      "success" -> "You've been logged out"
+      "success" -> "ログアウトしました"
     )
   }
 
@@ -69,7 +69,7 @@ object UserController extends Controller with Secured {
   val signupForm = Form(
     tuple(
       "email" -> nonEmptyText.verifying(
-        "This email address is already registered.",
+        "このメールアドレスは既に登録されています",
         email => User.findByEmail(email).isEmpty
       ),
       "name" -> nonEmptyText,
@@ -77,7 +77,7 @@ object UserController extends Controller with Secured {
         "main" -> nonEmptyText,
         "confirm" -> nonEmptyText
       ).verifying(
-          "Password is not match.",
+          "パスワードが一致しません",
           password => password._1 == password._2
         )
     )
