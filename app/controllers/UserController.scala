@@ -28,7 +28,7 @@ object UserController extends Controller with Secured {
 //    Ok(views.html.test("Oops!!!"))
 //  }}
 
-    def show = IsAuthenticated {email => _ => {
+  def show = IsAuthenticated {email => _ => {
     val user: Option[User] = User.findByEmail(email)
     Logger.debug("UserController.show =>" + user + ", " + email)
     user.map {
@@ -49,10 +49,14 @@ object UserController extends Controller with Secured {
     Logger.debug("authenticate")
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.login(formWithErrors)),
-      user => Redirect(routes.UserController.show).withSession("email" -> user._1)
+      user => Redirect(routes.UserController.show)
+        .withSession(session +
+          ("email" -> user._1) +
+          ("validSession" -> "1") +
+          ("startSession" -> new DateTime().toString())
+        )
     )
-  }
-  }
+  }}
 
   // ログアウト
   def logout = Action {
@@ -91,9 +95,14 @@ object UserController extends Controller with Secured {
       form => {
         val timeStamp = new DateTime()
         Logger.debug("timestamp =>" + timeStamp)
-        val user = User(form._1, form._2, form._3._1, timeStamp, timeStamp)
-        User.create(user)
-        Ok(views.html.user(user))
+        val user: Option[User] =
+          User.create(form._1, form._2, form._3._1,
+            timeStamp, timeStamp)
+        user.map {
+          user => Ok(views.html.user(user))
+        }.getOrElse {
+          Redirect(routes.UserController.signup())
+        }
       }
     )
   }

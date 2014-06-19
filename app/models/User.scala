@@ -11,30 +11,32 @@ import anorm.SqlParser._
 import org.joda.time._
 import models.AnormDateExtension._
 
-case class User(email: String,
+case class User(id: Long,
+                email: String,
                 name: String,
                 password: String,
                 created: DateTime,
                 modified: DateTime)
 
 object User {
-  val simple = {
+  val user = {
+    get[Long]("id") ~
     get[String]("user.email") ~
       get[String]("user.name") ~
       get[String]("user.password") ~
       get[DateTime]("user.created") ~
       get[DateTime]("user.modified") map {
-      case email ~ name ~ password ~ created ~ modified => {
-        User(email, name, password, created, modified)
+      case id~email ~ name ~ password ~ created ~ modified => {
+        User(id, email, name, password, created, modified)
       }
     }
   }
 
   def findById(id: Long): Option[User] = {
     DB.withConnection { implicit c =>
-      SQL("select * from user where user_id = {id}").on(
+      SQL("select * from user where id = {id}").on(
         'id -> id
-      ).as(User.simple.singleOpt)
+      ).as(user.singleOpt)
     }
   }
 
@@ -42,12 +44,12 @@ object User {
     DB.withConnection { implicit c =>
       SQL("select * from user where email = {email}").on(
         'email -> email
-      ).as(User.simple.singleOpt)
+      ).as(user.singleOpt)
     }
   }
   def findAll: Seq[User] = {
     DB.withConnection { implicit c =>
-      SQL("select * from user").as(User.simple *)
+      SQL("select * from user").as(user *)
     }
   }
 
@@ -61,13 +63,14 @@ object User {
       ).on(
           'email -> email,
           'password -> password
-        ).as(User.simple.singleOpt)
+        ).as(user.singleOpt)
     }
   }
 
-  def create(user: User): User = {
+  def create(email: String, name: String, password: String,
+             created: DateTime, modified: DateTime): Option[User] = {
     DB.withConnection { implicit c =>
-      SQL(
+      val userId = SQL(
         """
           insert into user (
             email, name, password, created, modified
@@ -77,14 +80,16 @@ object User {
           )
         """
       ).on(
-          'email -> user.email,
-          'name -> user.name,
-          'password -> user.password,
-          'created -> user.created,
-          'modified -> user.modified
-        ).executeUpdate()
-
-      user
+          'email -> email,
+          'name -> name,
+          'password -> password,
+          'created -> created,
+          'modified -> modified
+        ).executeInsert()
+      userId match {
+        case Some(userId) => User.findById(userId)
+        case _ => None
+      }
     }
   }
 }
