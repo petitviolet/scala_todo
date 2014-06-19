@@ -11,15 +11,11 @@ import play.api.data.Forms._
  */
 object TaskController extends Controller with Secured {
 
-  def test(message: String) = Action {
-    Ok(views.html.test(message))
-  }
-
   def tasks = Action { implicit request =>
     session.get("email").map {
       email => {
         User.findByEmail(email).map {
-          user => Ok(views.html.task_index(UserTask.userAll(user), taskForm))
+          user => Ok(views.html.user_task(UserTask.userAll(user), taskForm))
         } .getOrElse {Redirect(routes.UserController.login())}
       }
     }.getOrElse{Redirect(routes.UserController.login())}

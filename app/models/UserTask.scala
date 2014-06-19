@@ -11,8 +11,7 @@ import play.Logger
 /**
  * Created by Komurasaki on 2014/06/03.
  */
-case class UserTask(
-                     id: Long, user_id: Long, task_id: Long,
+case class UserTask(id: Long, user_id: Long, task_id: Long,
                 created: DateTime, modified: DateTime)
 
 object UserTask {
